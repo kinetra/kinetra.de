@@ -1,11 +1,11 @@
 "use client";
 
 import yaml from "js-yaml";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import Navbar from "@/components/global/nav-bar";
 import MDRenderer from "@/components/markdown/renderer";
-import { Loader2 } from "lucide-react";
 
 interface Blog {
   theme: string;

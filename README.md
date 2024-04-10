@@ -23,7 +23,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 ## Constribute
 
 If you want to add a blog, edit a blog, please open a PR (Pull-Request).
-Make sure the content you add/edit/remove is usefull.
+Make sure the content you add/edit/remove is useful.
 
 ## Learn More
 

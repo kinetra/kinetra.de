@@ -1,0 +1,172 @@
+theme: BencV2
+title: Future of [ serialization. ]
+content: |
+  Hello and welcome. In this post, I want to introduce you to BencV2, a **b**inary **enc**oder for blazingly fast serialization and backward/forward compatibility. You need high-performance serialization? Then you're right here.
+
+  > Currently BENC only supports go.
+
+  Anyway, you'll see benchmarks, a quick guide, and performance techniques utilized.
+
+  ### Why BencV2?
+
+  Serialization is important, as in API's, general storage, data transmissions, and much more, though this process may be `slow`, `inefficient` or it just `doesn't meet your performance requirements` when working with JSON, XML, or other serializers. Or you want to encode a third-party struct, but sadly, they used unexported fields? It's possible! ... So I addressed these issues and provided a final solution.
+
+  ### Blazingly Fast Serialization
+
+  One of the primary goals of BencV2 is speed. By using `binary encoding`, `buffer reusing`, and `caching`, BencV2 achieves **zero allocations** as well as **lightning speed**.
+
+  > zero allocations, and lightning speed is only working after the second time of encoding or decoding the same struct (same typeID), because BENC needs to analyze the struct first.
+
+  ### Backward and Forward Compatibility
+
+  Another key feature of BencV2 is its support for backward and forward compatibility. As software systems evolve over time, it's essential that the structure of data is able to change without breaking compatibility with existing data. BencV2 achieves this, but there are some rules to follow.
+
+  For example, you have a simple struct:
+
+  ````go
+  type User struct {
+  	ID int
+  	Name string
+  	Age int
+  }
+  ````
+
+  Now users have the ability to upload a profile image:
+
+  ````go
+  type User struct {
+  	ID int
+  	Name string
+  	Age int
+  	ProfileUrl string
+  }
+  ````
+
+  There we have the first rule:
+
+  `When adding fields, they need to be placed at the bottom`
+
+  Now the second and last rule, for example:
+
+  This is ✅ (right):
+
+  ````go
+  type User struct {
+  	ID int
+  	Name string
+  	Age int
+  }
+  ````
+
+  ````go
+  type User struct {
+  	ID int
+  	// Name string - removed because the field beneath it has a different type.
+  	Age int
+  }
+  ````
+
+  This is ❌ (wrong):
+
+  BencV2 is based on the types of each field, rather than the name. A solution would be an ID to identify each field, which still could cause confusion, so it's planned to make a compiler.
+
+  ````go
+  type User struct {
+  	ID int
+  	Name string
+  	ProfileUrl string
+  }
+  ````
+
+  ````go
+  type User struct {
+  	ID int
+  	Name string //- not allowed to be removed because the field beneath it has the same type.
+  	ProfileUrl string
+  }
+  ````
+
+  This is the rule:
+
+  `When removing fields, the field beneath it has to be of a different type`
+
+
+  ### Benchmarks
+
+  Let's take a look at some benchmarks comparing BencV2 with other popular serialization formats:
+
+  ...
+
+  The full list of the benchmarks can be found [...]
+
+  ### Quick Guide
+
+  Getting started with BencV2 is easy. Simply import the BencV2 package into your Go project and start encoding and decoding your data.
+
+  Benc (V1 and V2) supports the following types: `string, unsafe string, int 64, int 32, int 16, int 8, uint 64, uint 32, uint 16, uint 8 = byte, float32, float64, bool, char, complex64, complex128, time, map, slice, structs (V2 only) `
+
+  Here's a quick example:
+
+  ````go
+  package main
+
+  import (
+  	"fmt"
+  	benc "github.com/kinetra/bencv2"
+  )
+
+  type User struct {
+  	ID int
+  	Name string
+  	Age int
+  }
+
+  func main() {
+  	user := User{ID: 1, Name: "Alice", Age: 30}
+
+  	// Create a BENC instance; this should be global.
+  	encoder := benc.New()
+
+  	// Serialize user data
+  	encodedData, err := benc.Encode(&user)
+
+  	if err != nil {
+  		fmt.Println("Error encoding data:", err)
+  		return
+  	}
+
+  	// Deserialize user data
+  	var decodedUser User
+
+  	if err = benc.Decode(encodedData, &decodedUser); err != nil {
+  		fmt.Println("Error decoding data:", err)
+  		return
+  	}
+
+  	fmt.Println("Decoded user:", decodedUser)
+  }
+  ````
+
+  ### Performance Techniques Utilized
+
+  To achieve its impressive performance, BencV2 employs a variety of optimization techniques, including:
+
+  - Binary encoding: By representing data in binary format rather than text, BencV2 minimizes overhead and reduces serialization time.
+
+  - Buffer Reusing: BencV2 uses buffer reusing, to remove the additional time to allocate a new byte slice.
+
+  - Caching: To correctly encode or decode a struct, BencV2 needs to analyze the fields of the struct, which is inefficient, so by caching the encoding or decoding methods of each field, BencV2 can just skip analyzing the struct.
+
+  In conclusion, BencV2 is a high-performance binary encoder that offers blazingly fast serialization and excellent backward and forward compatibility. If you're looking to optimize the performance of your Go applications, give BencV2 a try. You won't be disappointed!
+
+  ### Plans for the Future
+
+  - **JavaScript support**
+  - **Roadmap**
+  - Better forward/backward compatability
+  - Support for C/C++, as well as Java, Python, C#, and Rust
+  - A compiler to generate code for the given message (struct in the benc-c format) and given language
+
+  ### Reporting Issues or Having Ideas
+
+  Please report issues or enhancements in the official GitHub repository for BencV2.

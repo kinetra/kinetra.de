@@ -19,15 +19,15 @@ content: |
 
   ### Backward and Forward Compatibility
 
-  Another key feature of BencV2 is its support for backward and forward compatibility. As software systems evolve over time, it's essential that the structure of data is able to change without breaking compatibility with existing data. BencV2 achieves this, but there are some rules to follow.
+  Another key feature of BencV2 is its support for backward and forward compatibility. As software systems evolve over time, it's essential that the structure of data is able to change without breaking compatibility with existing data. BencV2 achieves this, like protobuf does.
 
-  For example, you have a simple struct:
+  For example, you have a simple struct, mark all fields with a `id` tag:
 
   ````go
   type User struct {
-  	ID int
-  	Name string
-  	Age int
+  	ID int `id:"1"`
+  	Name string `id:"2"`
+  	Age int `id:"3"`
   }
   ````
 
@@ -35,10 +35,10 @@ content: |
 
   ````go
   type User struct {
-  	ID int
-  	Name string
-  	Age int
-  	ProfileUrl string
+  	ID int `id:"1"`
+  	Name string `id:"2"`
+  	Age int `id:"3"`
+  	ProfileUrl string `id:"4"`
   }
   ````
 
@@ -48,62 +48,36 @@ content: |
 
   Now the second and last rule, for example:
 
-  This is ✅ (right):
-
   ````go
   type User struct {
-  	ID int
-  	Name string
-  	Age int
+  	ID int `id:"1"`
+  	Name string `id:"2"`
+  	Age int `id:"3"`
   }
   ````
 
   ````go
   type User struct {
-  	ID int
-  	// Name string - removed because the field beneath it has a different type.
-  	Age int
-  }
-  ````
-
-  This is ❌ (wrong):
-
-  BencV2 is based on the types of each field, rather than the name. A solution would be an ID to identify each field, which still could cause confusion, so it's planned to make a compiler.
-
-  ````go
-  type User struct {
-  	ID int
-  	Name string
-  	ProfileUrl string
-  }
-  ````
-
-  ````go
-  type User struct {
-  	ID int
-  	Name string //- not allowed to be removed because the field beneath it has the same type.
-  	ProfileUrl string
+  	ID int `id:"1"`
+  	// Name string - removed, but now you cannot use the id `2` anymore, and you have to set it as a reserved id in the last param of the `encoder.Encode(&user, 2)` function
+  	Age int `id:"3"`
   }
   ````
 
   This is the rule:
 
-  `When removing fields, the field beneath it has to be of a different type`
+  `When removing fields, the id of the removed field, cannot be reused and has to be marked as reserved`
 
 
   ### Benchmarks
 
-  Let's take a look at some benchmarks comparing BencV2 with other popular serialization formats:
-
-  ...
-
-  The full list of the benchmarks can be found [...]
+  You take a look at some benchmarks comparing BencV2 with other popular serialization formats [here](https://github.com/kinetra/bencv2-benchs).
 
   ### Quick Guide
 
   Getting started with BencV2 is easy. Simply import the BencV2 package into your Go project and start encoding and decoding your data.
 
-  Benc (V1 and V2) supports the following types: `string, unsafe string, int 64, int 32, int 16, int 8, uint 64, uint 32, uint 16, uint 8 = byte, float32, float64, bool, char, complex64, complex128, time, map, slice, structs (V2 only) `
+  Benc (V1 and V2) supports the following types: `string, unsafe string, int 64, int 32, int 16, int 8, uint 64, uint 32, uint 16, uint 8 = byte, float32, float64, bool, map, slice, structs (V2 only) `
 
   Here's a quick example:
 
@@ -125,24 +99,16 @@ content: |
   	user := User{ID: 1, Name: "Alice", Age: 30}
 
   	// Create a BENC instance; this should be global.
-  	encoder := benc.New()
+    // 256 is the buffer size
+  	encoder := benc.New(256)
 
   	// Serialize user data
-  	encodedData, err := benc.Encode(&user)
-
-  	if err != nil {
-  		fmt.Println("Error encoding data:", err)
-  		return
-  	}
+  	encodedData := encoder.Encode(&user)
 
   	// Deserialize user data
   	var decodedUser User
 
-  	if err = benc.Decode(encodedData, &decodedUser); err != nil {
-  		fmt.Println("Error decoding data:", err)
-  		return
-  	}
-
+  	encoder.Decode(encodedData, &decodedUser)
   	fmt.Println("Decoded user:", decodedUser)
   }
   ````
@@ -161,12 +127,10 @@ content: |
 
   ### Plans for the Future
 
-  - **JavaScript support**
-  - **Roadmap**
-  - Better forward/backward compatability
+  - **Typescript/JavaScript support**
   - Support for C/C++, as well as Java, Python, C#, and Rust
-  - A compiler to generate code for the given message (struct in the benc-c format) and given language
+  - A compiler to generate code for easier forward and backward compatibility
 
   ### Reporting Issues or Having Ideas
 
-  Please report issues or enhancements in the official GitHub repository for BencV2.
+  Please report issues or enhancements in the official `BencV2` GitHub repository.

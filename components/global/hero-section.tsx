@@ -22,7 +22,10 @@ function HeroSection() {
           experience.
         </p>
 
-        <Link href="/blog/benc-v2" className="inline-block">
+        <Link
+          href="https://github.com/bencv2/go-runtime"
+          className="inline-block"
+        >
           <Title text="Get Started" />
         </Link>
       </div>
@@ -30,18 +33,18 @@ function HeroSection() {
       <div className="relative mb-14 lg:mb-0">
         <div className="w-72 h-72 space-y-3 -rotate-[30deg] relative">
           <div className="flex gap-3 translate-x-8">
-            <div className="w-32 h-32 rounded-2xl bg-purple-400" />
-            <div className="w-32 h-32 rounded-full bg-indigo-400" />
+            <div className="w-32 h-32 rounded-2xl bg-purple-300" />
+            <div className="w-32 h-32 rounded-full bg-indigo-300" />
           </div>
           <div className="flex gap-3 -translate-x-8">
-            <div className="w-32 h-32 rounded-2xl bg-indigo-400" />
-            <div className="w-32 h-32 rounded-full bg-purple-400" />
+            <div className="w-32 h-32 rounded-2xl bg-indigo-300" />
+            <div className="w-32 h-32 rounded-full bg-purple-300" />
           </div>
           <div className="glow absolute top-[40%] right-1/2 -z-[9999]" />
         </div>
 
         <Link
-          href="/blog/benc-v2"
+          href="https://github.com/bencv2/go-runtime"
           className="absolute bottom-5 sm:bottom-14 left-0 sm:left-10"
         >
           <MovingBorderBtn

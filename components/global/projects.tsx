@@ -8,16 +8,16 @@ import { HoverEffect } from "@/components/ui/card-hover-effect";
 function Projects() {
   const projects = [
     {
-      title: "BencV1",
-      link: "https://github.com/deneonet/benc",
+      title: "bencv2 go",
+      link: "https://github.com/bencv2/go-runtime",
       description:
-        "The original - faster than V2, but no validations and data structure changes are unsupported. But good if speed is essential.",
+        "The golang runtime of bencv2 - efficient, blazingly fast, data validation and compatible with data structure changes.",
     },
     {
-      title: "BencV2",
-      link: "/blog/benc-v2",
+      title: "bencc",
+      link: "https://github.com/bencv2/bencc",
       description:
-        "The upgrade of v1 - efficient, blazingly fast, data validation and compatible with data structure changes.",
+        "The compiler of bencv2 - generated and check broken bencv2 code in seconds. Don't let broken compatibility stop you.",
     },
   ];
 

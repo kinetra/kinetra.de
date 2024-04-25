@@ -1,14 +1,12 @@
 import React from "react";
 
 import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-
-import { tomorrowNightBright as dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
 import { cn } from "@/lib/utils";
+import { highlighter } from "@/lib/highlight";
 
 interface Props {
   children: string;
@@ -16,7 +14,9 @@ interface Props {
   p_className?: string;
 }
 
-function MDRenderer({ children, className, p_className }: Props) {
+async function MDRenderer({ children, className, p_className }: Props) {
+  const hl = await highlighter();
+
   return (
     <ReactMarkdown
       className={cn("prose prose-invert text-sm mt-8", className)}
@@ -39,18 +39,20 @@ function MDRenderer({ children, className, p_className }: Props) {
           </strong>
         ),
         code: ({ children, className }) => {
-          console.log(children);
-          return className ? (
-            // @ts-expect-error
-            <SyntaxHighlighter
-              customStyle={{ margin: 0, padding: 0 }}
-              language={className.replace("language-", "")}
-              wrapLongLines
-              style={dark}
-            >
-              {children}
-            </SyntaxHighlighter>
-          ) : (
+          if (className) {
+            const html = hl.codeToHtml(children as string, {
+              theme: "aurora-x",
+              lang: className.replace("language-", ""),
+            });
+
+            if (!html) {
+              return;
+            }
+
+            return <div dangerouslySetInnerHTML={{ __html: html }} />;
+          }
+
+          return (
             <code className="before:hidden after:hidden bg-gray-100 dark:bg-zinc-800 rounded-md p-1 font-semibold break-words">
               {children}
             </code>
@@ -64,7 +66,7 @@ function MDRenderer({ children, className, p_className }: Props) {
         a: ({ href, children }) => (
           <a
             href={href}
-            className="text-indigo-600 dark:text-indigo-300 font-semibold text-xs hover:text-indigo-400 dark:hover:text-indigo-400 break-words"
+            className="no-underline text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-400 dark:hover:text-indigo-300 break-words"
           >
             {children}
           </a>

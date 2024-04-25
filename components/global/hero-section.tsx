@@ -1,66 +1,74 @@
 import React from "react";
 
 import Link from "next/link";
-import { MovingBorderBtn } from "@/components/ui/moving-border";
-import { SiReactrouter } from "react-icons/si";
-import Title from "@/components/shared/title";
+import { SiCheckmarx } from "react-icons/si";
 
 function HeroSection() {
   return (
     <div className="min-h-[60vh] flex flex-col-reverse gap-14 lg:gap-0 lg:flex-row items-center justify-between ">
       <div className="space-y-10 text-center lg:text-left">
         <h1 className="text-4xl w-[75%] mx-auto lg:mx-0 lg:text-7xl font-bold">
-          <span className="underline underline-offset-8 decoration-purple-500">
-            Lightning-fast
-          </span>{" "}
-          serialization.
+          Bencv2.
         </h1>
 
         <p className="md:w-96 md:mx-auto lg:mx-0 text-lg text-gray-300">
-          Benc V2, an upgraded version of V1, is efficient, blazingly fast and
-          compatible with data structure changes. Scale better, love the
-          experience.
+          Introducing a lightning-fast, free and open-source serializer for Go.
         </p>
 
-        <Link
-          href="https://github.com/bencv2/go-runtime"
-          className="inline-block"
-        >
-          <Title text="Get Started" />
+        <div className="md:w-96 md:mx-auto lg:mx-0 text-lg text-gray-100">
+          <p className="flex justify-center lg:justify-start items-center gap-x-2">
+            <SiCheckmarx className="text-blue-400" />
+            Efficient: Zero Memory Allocations
+          </p>
+
+          <p className="flex justify-center lg:justify-start items-center gap-x-2">
+            <SiCheckmarx className="text-purple-400" />
+            Lightning-Fast:{" "}
+            <a
+              className="underline underline-offset-4 hover:text-blue-200 decoration-blue-400"
+              href="https://github.com/bencv2/go-benchmarks"
+            >
+              Convince yourself
+            </a>
+          </p>
+
+          <p className="flex justify-center lg:justify-start items-center gap-x-2">
+            <SiCheckmarx className="text-blue-400" />
+            Dont let broken compatibility stop you
+          </p>
+        </div>
+
+        <Link href="https://kinetra.de/kin-cli" className="inline-block">
+          <h1 className="text-3xl font-bold hover:text-purple-200 transition-all">
+            Get Started
+          </h1>
         </Link>
       </div>
 
-      <div className="relative mb-14 lg:mb-0">
-        <div className="w-72 h-72 space-y-3 -rotate-[30deg] relative">
-          <div className="flex gap-3 translate-x-8">
-            <div className="w-32 h-32 rounded-2xl bg-purple-400" />
-            <div className="w-32 h-32 rounded-full bg-indigo-400" />
-          </div>
-          <div className="flex gap-3 -translate-x-8">
-            <div className="w-32 h-32 rounded-2xl bg-indigo-400" />
-            <div className="w-32 h-32 rounded-full bg-purple-400" />
-          </div>
-          <div className="glow absolute top-[40%] right-1/2 -z-[9999]" />
+      <div className="relative mb-14 mt-8 flex justify-center lg:my-0">
+        <div className="flex gap-3">
+          <div className="w-96 h-72 rounded-2xl bg-purple-400" />
         </div>
 
-        <Link
-          href="https://github.com/bencv2/go-runtime"
-          className="absolute bottom-5 sm:bottom-14 left-0 sm:left-10"
-        >
-          <MovingBorderBtn
-            borderRadius="0.5rem"
-            className="p-3 gap-x-2 font-semibold"
-          >
-            <SiReactrouter className="h-5 w-5" />
+        <pre className="absolute top-[10%] text-lg w-[80%] text-black/90 font-bold">
+          package person
+          <br />
+          <br />
+          ctr Person {"{"}
+          <br />
+          {"    "}name string @1
+          <br />
+          {"    "}age uint8 @2
+          <br />
+          {"}"}
+        </pre>
 
-            <p>
-              Benc V2 is{" "}
-              <span className="underline underline-offset-2 decoration-purple-300">
-                OUT
-              </span>
-            </p>
-          </MovingBorderBtn>
-        </Link>
+        <a
+          href="https://kinetra.de/kin-cli"
+          className="absolute bottom-[7%] text-center font-bold text-sm p-2 w-[80%] bg-black/70 rounded-lg"
+        >
+          Compile It
+        </a>
       </div>
     </div>
   );

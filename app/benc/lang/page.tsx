@@ -108,8 +108,8 @@ The following types are supported: \`string float32 float64 int uint int8 int16 
 \`string\`: a string in [ASCII](https://www.ascii-code.com/) representation, cannot be longer than \`2^63\`  
 \`bytes\`: a sequence of bytes, cannot be longer than \`2^63\`  
 
-\`int\`: uses variable-length encoding, for better performance, use fixed-length ones (int8, int16, ...)  
-\`uint\`: uses variable-length encoding, for better performance, use fixed-length ones (uint8, uint16, ...)  
+\`int\`: uses variable-length encoding. For better performance, use fixed-length ones (int8, int16, ...)  
+\`uint\`: uses variable-length encoding. For better performance, use fixed-length ones (uint8, uint16, ...)  
 
 \`int8\`: fixed signed integer of 1 byte  
 \`int16\`: fixed signed integer of 2 byte  
@@ -121,9 +121,11 @@ The following also applies for uint8, uint16, uint32, uint64
 ## Attributes
 The following field attributes are supported: \`safe  map[K]  []\`
 
-\`[]\`: Marks the field as an Array, for example: \`[] people Person @1\`  
-\`map[K]\`: Marks the field as a Map, for example: \`map[string] bank float64 @2\`  
-\`safe\`: Only supported in \`go\` and \`string\` type, uses safe string conversions, for example: \`safe safeString string @3\`  
+map[K] and [] is currently only supported by \`bencc\`, not by any runtime, so generated code using these attributes is resulting into \`errors\`.
+
+\`[]\`: Marks the field as an Array, for example: \`people []Person @1\`  
+\`map[K]\`: Marks the field as a Map, for example: \`bank map[string]float64 @2\`  
+\`safe\`: Only supported in \`go\` and \`string\` type, uses safe string conversions, for example: \`safe name string @3\`  
 
 ## Deleting Fields
 When deleting fields, the ID of the removed field has to be reserved and \`cannot\` be reused again for new fields.
